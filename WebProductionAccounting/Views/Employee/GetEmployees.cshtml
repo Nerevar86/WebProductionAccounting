@@ -1,0 +1,50 @@
+﻿@model IEnumerable<WebProductionAccounting.Domain.Entities.Employee>
+  
+@{
+    ViewBag.Tittle = "Список сотрудников";
+    Layout = "_Layout";
+}
+<div сlass ="btn-group">
+ @*<a href="#" class="button_hola">Новый сотрудник</a>*@
+ <button type="button" class="button_hola" id ="btn-eml-add">
+ <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
+  <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
+ </svg>
+ Новый сотрудник
+</button>
+</div>
+<br />
+<!--Table Emloyees-->
+<table class="table">
+<thead>
+    <tr id ="tr-hover">
+        @*<th scope="col" class ="visually-hidden">Id</th>*@
+        <th scope="col">№</th>
+        <th scope="col">Фамилия</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Отчество</th>
+        <th scope="col">Табельный номер</th>
+        <th scope="col">Профессия</th>
+        <th>Дата трудоустройства</th>
+    </tr>
+</thead>
+<tbody class="table-group-divider">
+        @{var employees = Model.ToList();}
+        @for (int i = 0; i < employees.Count; i++)
+        {
+            var number_row = i + 1;
+            <tr> 
+                @*<td class ="visually-hidden"><a></a>@employees[i].Id</td>*@
+                <td>@number_row</td>
+                <td>@employees[i].Lastname</td>
+                <td>@employees[i].Firstname</td>
+                <td>@employees[i].Middlename</td>
+                <td>@employees[i].PersonnelNumber</td>
+                <td>@employees[i].Position</td>
+                <td>@employees[i].DateOfEmployment</td>  
+                <a asp-controller="Employee" asp-action=" EditEmployee" asp-route-id=@employees[i].Id >Редактировать</a>
+            </tr>             
+        }
+</tbody>
+</table>

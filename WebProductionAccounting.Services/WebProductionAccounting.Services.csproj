@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebProductionAccounting.DAL\WebProductionAccounting.DAL.csproj" />
+    <ProjectReference Include="..\WebProductionAccounting.Domain\WebProductionAccounting.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
