@@ -1,0 +1,120 @@
+﻿@model WebProductionAccounting.Domain.ViewModels.Employee.EmployeeViewModel
+@using WebProductionAccounting.Domain.Enum
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    //Layout = "_EmployeeEdit";
+    Layout = "_Layout";
+    DateTime dateOfEmployment = (DateTime)Convert.ToDateTime(Model.DateOfEmployment);
+    var positions = Html.GetEnumSelectList<EmployeePositions>();
+    string title = $"Редактировать данные сотрудника: {Model.Lastname} {Model.Firstname} {Model.Middlename}, {Model.PersonnelNumber}";
+}
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+<style>
+.field-validation-error {
+    color: #b94a48;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+input.valid {
+    border: 1px solid #16a085;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+</style>
+
+<form method="post" asp-action="EditEmployee">
+    <input asp-for="Id" type="hidden" />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h3 class="text-white">@title</h3>
+            <hr />
+        </div>
+        @*<div asp-validation-summary="All"></div>*@
+        <div class="mb-3">
+            <label asp-for="Lastname" class="text-white"></label>
+            <input asp-for="Lastname" class="form-control"/>
+            <span asp-validation-for="Lastname" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Firstname" class="text-white"></label>
+            <input asp-for="Firstname" class="form-control"/>
+            <span asp-validation-for="Firstname" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Middlename" class="text-white"></label>
+            <input asp-for="Middlename" class="form-control"/>
+            <span asp-validation-for="Middlename" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PersonnelNumber" class="text-white"></label>
+            <input asp-for="PersonnelNumber" class="form-control"/>
+            <span asp-validation-for="PersonnelNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            @*<label asp-for="Position" class="text-white"></label>
+            <input asp-for="Position" class="form-control"/>*@
+           @* <label asp-for="Position" class="col-form-label text-white"></label>
+            <select class="form-control" style ="width:50%" id ="employeePositionId2">
+               <option value=@Model.Position>@Model.Position</option>    
+            </select>*@
+          @*  <select asp-for="Position" class="form-control" style ="width:50%" id="employeePositionId2"></select>*@
+            <span asp-validation-for="Position" class="text-danger"></span>
+            <label asp-for = "Position"  class = "control-label text-white" style ="width:75%"></label> 
+            <select asp-for = "Position"  class = "form-control select-position"  
+             asp-items =@positions> 
+                 <option value=@Model.Position>@Model.Position</option>
+                 </select>
+            <span  asp-validation-for = "Position"  class = "text-danger" ></span> 
+        </div>
+        <div class="mb-3">
+            <label asp-for="DateOfEmployment" class="text-white"></label>
+            <input asp-for=@dateOfEmployment type="date" class="form-control"/>
+            @*<input asp-for="DateOfEmployment" type="date" class="form-control"/>*@
+            <span asp-validation-for="DateOfEmployment" class="text-danger"></span>
+        </div>
+        <button type="submit" class="button_hola btn-green" style="width:150px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"></path>
+              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"></path>
+            </svg>Обновить   
+        </button> 
+        <a asp-controller="Employee" asp-action="GetEmployees" class="button_hola btn-orange" style="width:150px">
+           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+             <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8Zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5Z"/>
+           </svg>Назад к списку
+        </a>
+    </div>
+</form>
+
+<script>
+$('.select-position').select2({
+   placeholder: "Выберите должность",
+   minimumInputLength: 0,
+   allowClear: true,
+   ajax: {
+        type: "POST",
+        url: "@Url.Action("GetPosition", "Employee")",
+        dataType: "json",
+        processResults: function (result) {
+            return {
+                results: $.map(result, function (val, index) {
+                    return {
+                        id: index, 
+                        text: val
+                    };
+                }),
+            };
+        }
+    }
+});
+</script>
