@@ -1,0 +1,69 @@
+﻿@model WebProductionAccounting.Domain.ViewModels.Work.WorkViewModel
+@using WebProductionAccounting.Domain.Enum
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    string title = $"Редактировать данные выполненной работы: {Model.Name}";
+}
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+<style>
+.field-validation-error {
+    color: #b94a48;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+input.valid {
+    border: 1px solid #16a085;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+</style>
+
+<form method="post" asp-action="EditWork">
+    <input asp-for="Id" type="hidden" />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h3 class="text-white">@title</h3>
+            <hr />
+        </div>
+        @*<div asp-validation-summary="All"></div>*@
+        <div class="mb-3">
+            <label asp-for="Name" class="text-white"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Scope" class="text-white"></label>
+            <input asp-for="Scope" type="number" size="4" step ="0.01" class="form-control"/>
+            <span asp-validation-for="Scope" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for=@Model.DateTimeImplementation class="text-white"></label>
+            <input asp-for=@Model.DateTimeImplementation class="form-control"/>
+            <span asp-validation-for="DateTimeImplementation" class="text-danger"></span>
+        </div>
+        <button type="submit" class="button_hola btn-green" style="width:150px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"></path>
+              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"></path>
+            </svg>Обновить   
+        </button> 
+        <a asp-controller="Employee" asp-action="GetEmployees" class="button_hola btn-orange" style="width:150px">
+           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+             <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8Zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5Z"/>
+           </svg>Назад к списку
+        </a>
+    </div>
+</form>
+
+

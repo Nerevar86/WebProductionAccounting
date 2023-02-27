@@ -17,7 +17,7 @@ namespace WebProductionAccounting.Domain.ViewModels.Work
         [Display(Name = "Дата и время выполнения")]
         [Required(ErrorMessage = "Укажите дату и время выполнения")]
         public DateTime DateTimeImplementation { get; set; } = DateTime.Now;
-
+       
     }
 
 

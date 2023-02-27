@@ -36,7 +36,7 @@ namespace WebProductionAccounting.DAL
         /** Настройка модели */
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("employees");
+            //modelBuilder.HasDefaultSchema("employees");
 
             // Добавление записей в сущность Сотрудники по умолчанию 
             var employees = new Employee[]
@@ -76,7 +76,7 @@ namespace WebProductionAccounting.DAL
                 new()
                 {
                 Id = 2,
-                Name = "Составление техноческого задания",
+                Name = "Составление технического задания",
                 Scope = 5.25,
                 DateTimeImplementation = DateTime.Now
                 },
@@ -149,7 +149,7 @@ namespace WebProductionAccounting.DAL
 
             modelBuilder.Entity<Employee>(b =>
             {
-                b.ToTable("Employees").HasKey(e => e.Id);
+                b.ToTable("employees").HasKey(e => e.Id);
 
                 b.HasData(employees);
             });
@@ -157,7 +157,7 @@ namespace WebProductionAccounting.DAL
 
             modelBuilder.Entity<Work>(b =>
             {
-                b.ToTable("Works").HasKey(w => w.Id);
+                b.ToTable("works").HasKey(w => w.Id);
 
                 b.HasData(works);
             });
@@ -179,7 +179,7 @@ namespace WebProductionAccounting.DAL
                 {
                     j.HasKey(ew => new { ew.EmployeeId, ew.WorkId });
                     j.HasData(employee_works);
-                    j.ToTable("EmployeeWorks");
+                    j.ToTable("employee_works");
                 });
             }
 

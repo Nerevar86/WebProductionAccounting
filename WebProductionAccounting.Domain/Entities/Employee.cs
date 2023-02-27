@@ -22,11 +22,11 @@ namespace WebProductionAccounting.Domain.Entities
 
         [Column(TypeName = "date")]
         public DateTime DateOfEmployment { get; set; } = DateTime.Now;
-        public virtual IList<Work> Works { get; } = new List<Work>(); // Skip collection navigation
+        public IList<Work> Works { get; } = new List<Work>(); // Skip collection navigation
 
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
-        public virtual IList<EmployeeWork> EmployeeWorks { get; set; } = new List<EmployeeWork>(); // Collection navigation
+        public IList<EmployeeWork> EmployeeWorks { get; set; } = new List<EmployeeWork>(); // Collection navigation
 
 
     }

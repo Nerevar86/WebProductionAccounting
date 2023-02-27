@@ -1,10 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebProductionAccounting;
 using WebProductionAccounting.DAL;
-using WebProductionAccounting.DAL.Interfaces;
-using WebProductionAccounting.DAL.Repositories;
-using WebProductionAccounting.Services.Implementations;
-using WebProductionAccounting.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +17,9 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Reg DbConext pssql
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseNpgsql(connection));
+options.UseNpgsql(connection)
+.UseSnakeCaseNamingConvention()
+.EnableSensitiveDataLogging(true));
 
 // Add Npgsql.EnableLegacyTimestampBehavior and Npgsql.DisableDateTimeInfinityConversions in DbContext
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

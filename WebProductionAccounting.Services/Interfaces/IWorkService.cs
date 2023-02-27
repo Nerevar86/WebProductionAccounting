@@ -11,7 +11,7 @@ namespace WebProductionAccounting.Services.Interfaces
 
         Task<IBaseResponse<WorkViewModel>> GetWork(int id);
 
-        Task<IBaseResponse<Work>> CreateWork(WorkViewModel model);
+        Task<IBaseResponse<Work>> CreateWork(WorkViewModel model,int id);
 
         Task<IBaseResponse<bool>> DeleteWork(int id);
 

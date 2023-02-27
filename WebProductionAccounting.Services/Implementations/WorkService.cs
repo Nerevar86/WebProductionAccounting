@@ -22,7 +22,7 @@ namespace WebProductionAccounting.Services.Implementations
 
 
         //__________Create work__________
-        public async Task<IBaseResponse<Work>> CreateWork(WorkViewModel model)
+        public async Task<IBaseResponse<Work>> CreateWork(WorkViewModel model, int id)
         {
             try
             {
@@ -34,6 +34,14 @@ namespace WebProductionAccounting.Services.Implementations
                     DateTimeImplementation = model.DateTimeImplementation
                 };
                 await _workRepository.Create(work);
+
+                work.EmployeeWorks.Add(new EmployeeWork()
+                {
+                    Work = work,
+                    EmployeeId = id
+                });
+
+                await _workRepository.Update(work);
 
                 return new BaseResponse<Work>()
                 {
@@ -166,7 +174,7 @@ namespace WebProductionAccounting.Services.Implementations
 
 
         //__________Get list of works __________
-        public IBaseResponse<List<WorkViewModel>> GetWorks(int employeeId)
+        public IBaseResponse<List<WorkViewModel>> GetWorks(int id)
         {
             try
             {
@@ -179,15 +187,18 @@ namespace WebProductionAccounting.Services.Implementations
                 //       DateTimeImplementation = x.DateTimeImplementation,
                 //   }).ToList();
                 var works = _workRepository.GetAll()
-                    .Where(w => w.Employees
-                    .Any(e => e.Id == 1))
-                    .Select(w => new WorkViewModel()
+                  .Where(e =>
+                  e.Employees.Any(e => e.Id == id))
+
+                  .Select(w => new WorkViewModel()
                   {
                       Id = w.Id,
                       Name = w.Name,
                       Scope = w.Scope,
-                      DateTimeImplementation = w.DateTimeImplementation,
-                  }).ToList();
+                      DateTimeImplementation = w.DateTimeImplementation
+                  })
+                  .ToList();
+
                 if (!works.Any())
                 {
                     return new BaseResponse<List<WorkViewModel>>()

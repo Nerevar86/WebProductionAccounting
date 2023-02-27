@@ -200,6 +200,13 @@ body {
 .button_hola.btn-orange:hover {
     background: rgb(255, 106, 0);
 }
+.button_hola.btn-red {
+    color: #dc3545;
+}
+
+.button_hola.btn-red:hover {
+    background: #dc3545;
+}
 
 .button_hola,
 .button_hola::before,

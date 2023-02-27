@@ -1,23 +1,14 @@
-﻿@*@model List<WebProductionAccounting.Domain.Entities.Employee>*@
-@model List<WebProductionAccounting.Domain.ViewModels.Employee.EmployeeViewModel>
+﻿@model List<WebProductionAccounting.Domain.ViewModels.Employee.EmployeeViewModel>
 
 @{
     ViewBag.Tittle = "Список сотрудников";
     Layout = "_Layout";
 }
-@*<div сlass ="btn-group">
 
- <button type="button" class="button_hola btn-green">
- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
-  <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
- </svg> &nbsp;Новый сотрудник
-</button>
-</div>*@
 <div class="container p-3">
     <div class="row pt4">
         <div class="col-6">
-            <h2 class="text-white">Список сотрудников</h2>
+            <h2 class="text-white">@ViewBag.Tittle</h2>
         </div>
         <div class="col-6 text-end">
           <a asp-asp-controller="Employee" asp-action="CreateEmployee" class="button_hola btn-green">
@@ -36,11 +27,7 @@
 <table class="table text-white" style="width:100%">
 <thead>
     <tr id ="tr-hover">
-            @*<th scope="col" class ="visually-hidden">Id</th>*@
         <th class="text-center" scope="col">№</th>
-       @* <th scope="col">Фамилия</th>
-        <th scope="col">Имя</th>
-        <th scope="col">Отчество</th>*@
         <th class="text-center" scope="col">ФИО</th>
         <th class="text-center" scope="col">Табельный номер</th>
         <th class="text-center" scope="col">Профессия</th>
@@ -54,25 +41,21 @@
             var number_row = i + 1;
             string fullname = $"{Model[i].Lastname} {Model[i].Firstname} {Model[i].Middlename}";
 
-            <tr>
-                @*<td class ="visually-hidden"><a></a>@employees[i].Id</td>*@         
+            <tr>       
                 <td width="5%" class="text-center">@number_row</td>
-                   @*<td width="12%" class="text-center">@Model[i].Lastname</td>
-                   <td width="12%" class="text-center">@Model[i].Firstname</td>
-                   <td width="12%" class="text-center">@Model[i].Middlename</td>*@
-                <td width="25%" class="text-center">@fullname<br /><a href="#" class="link-info">Список выполненных работ</a></td>   
+                <td width="25%" class="text-center">@fullname<br /><a asp-controller="Work" asp-action="GetWorks" asp-route-id="@Model[i].Id" class="link-info">Список выполненных работ</a></td>   
                 <td width="15%" class="text-center">@Model[i].PersonnelNumber</td>
                 <td width="25%" class="text-center">@Model[i].Position</td>
                 <td width="15%" class="text-center">@Model[i].DateOfEmployment</td> 
                 <td width="15%">
                     <div class="w-75 btn-group" role="group">
                       <a asp-controller="Employee" asp-action="EditEmployee" asp-route-id="@Model[i].Id" 
-                      type="button" class="btn btn-outline-info btn-sm">
+                      class="btn btn-outline-info btn-sm">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-gear" viewBox="0 0 16 16">
                       <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
                       </svg> Редактировать</a>
-                  <a asp-controller="Employee" asp-action="DeleteEmployee" asp-route-id="@Model[i].Id"
-                        type="button" class="btn btn-outline-danger btn-sm"> 
+                      <a asp-controller="Employee" asp-action="DeleteEmployee" asp-route-id="@Model[i].Id"
+                      class="btn btn-outline-danger btn-sm"> 
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-slash" viewBox="0 0 16 16">
                       <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465l3.465-3.465Zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465Zm-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
                       </svg> Удалить</a>
