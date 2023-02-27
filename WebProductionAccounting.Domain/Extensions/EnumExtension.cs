@@ -1,6 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using WebProductionAccounting.Domain.Enum;
 
 namespace WebProductionAccounting.Domain.Extensions
 {
@@ -13,7 +13,8 @@ namespace WebProductionAccounting.Domain.Extensions
                 .GetMember(enumValue.ToString())
                 .First()
                 .GetCustomAttribute<DisplayAttribute>()
-                ?.GetName() ?? "Неопределенный";
+                ?.GetName() ?? "Неопределено";
         }
+  
     }
 }

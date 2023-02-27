@@ -1,12 +1,11 @@
-﻿using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebProductionAccounting.DAL.Interfaces;
 using WebProductionAccounting.Domain.Entities;
 using WebProductionAccounting.Domain.Enum;
 using WebProductionAccounting.Domain.Extensions;
 using WebProductionAccounting.Domain.Interfaces;
 using WebProductionAccounting.Domain.Response;
-using WebProductionAccounting.Domain.ViewModels;
+using WebProductionAccounting.Domain.ViewModels.Employee;
 using WebProductionAccounting.Services.Interfaces;
 
 namespace WebProductionAccounting.Services.Implementations
@@ -24,7 +23,7 @@ namespace WebProductionAccounting.Services.Implementations
 
 
         //__________Create employee__________
-        public async Task<IBaseResponse<Employee>> Create(EmployeeViewModel model)
+        public async Task<IBaseResponse<Employee>> CreateEmployee(EmployeeViewModel model)
         {
             try
             {
@@ -35,7 +34,10 @@ namespace WebProductionAccounting.Services.Implementations
                     Middlename = model.Middlename,
                     PersonnelNumber = model.PersonnelNumber,
                     Position = (EmployeePositions)Convert.ToInt32(model.Position),
-                    DateOfEmployment = model.DateOfEmployment
+                    //DateOfEmployment = DateTime.ParseExact(model.DateOfEmployment, "yyyyMMdd HH:mm", null
+                    DateOfEmployment = DateTime.Parse(model.DateOfEmployment)
+
+
                 };
                 await _employeeRepository.Create(employee);
 
@@ -49,7 +51,7 @@ namespace WebProductionAccounting.Services.Implementations
             {
                 return new BaseResponse<Employee>()
                 {
-                    Description = $"[Create] : {ex.Message}",
+                    Description = $"[CreateEmployee] : {ex.Message}",
                     StatusCode = StatusCode.InternalServerError
                 };
             }
@@ -66,7 +68,7 @@ namespace WebProductionAccounting.Services.Implementations
                 {
                     return new BaseResponse<bool>()
                     {
-                        Description = "Employee not found",
+                        Description = "Сотрудник не найден",
                         StatusCode = StatusCode.EmployeeNotFound,
                         Data = false
                     };
@@ -92,16 +94,16 @@ namespace WebProductionAccounting.Services.Implementations
 
 
         //__________Edit employee__________
-        public async Task<IBaseResponse<Employee>> Edit(int id, EmployeeViewModel model)
+        public async Task<IBaseResponse<Employee>> EditEmployee(EmployeeViewModel model)
         {
             try
             {
-                var employee = await _employeeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+                var employee = await _employeeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == model.Id);
                 if (employee == null)
                 {
                     return new BaseResponse<Employee>()
                     {
-                        Description = "Employee not found",
+                        Description = "Сотрудник не найден",
                         StatusCode = StatusCode.EmployeeNotFound
                     };
                 }
@@ -110,9 +112,9 @@ namespace WebProductionAccounting.Services.Implementations
                 employee.Firstname = model.Firstname;
                 employee.Middlename = model.Middlename;
                 employee.PersonnelNumber = model.PersonnelNumber;
-                //update position employee
                 employee.Position = (EmployeePositions)Convert.ToInt32(model.Position);
-                employee.DateOfEmployment = model.DateOfEmployment;
+                //employee.DateOfEmployment = DateTime.ParseExact(model.DateOfEmployment, "yyyyMMdd HH:mm", null);
+                employee.DateOfEmployment = DateTime.Parse(model.DateOfEmployment);
 
                 await _employeeRepository.Update(employee);
 
@@ -127,7 +129,7 @@ namespace WebProductionAccounting.Services.Implementations
             {
                 return new BaseResponse<Employee>()
                 {
-                    Description = $"[Edit] : {ex.Message}",
+                    Description = $"[EditEmployee] : {ex.Message}",
                     StatusCode = StatusCode.InternalServerError
                 };
             }
@@ -156,7 +158,8 @@ namespace WebProductionAccounting.Services.Implementations
                     Middlename = employee.Middlename,
                     PersonnelNumber = employee.PersonnelNumber,
                     Position = employee.Position.GetDisplayName(),
-                    DateOfEmployment = employee.DateOfEmployment
+                    //DateOfEmployment = employee.DateOfEmployment.ToString("D")
+                    DateOfEmployment = employee.DateOfEmployment.ToLongDateString()
                 };
 
                 return new BaseResponse<EmployeeViewModel>()
@@ -191,7 +194,7 @@ namespace WebProductionAccounting.Services.Implementations
                         Middlename = x.Middlename,
                         PersonnelNumber = x.PersonnelNumber,
                         Position = x.Position.GetDisplayName(),
-                        DateOfEmployment = x.DateOfEmployment
+                        DateOfEmployment = x.DateOfEmployment.ToLongDateString()
                     })
                     .Where(x => EF.Functions.Like(x.Lastname + " " + x.Firstname + " " + x.Middlename, $"%{term}%"))
                     .ToDictionaryAsync(x => x.Id, t => t.Lastname + " " + t.Firstname + " " + t.Middlename);
@@ -211,21 +214,31 @@ namespace WebProductionAccounting.Services.Implementations
 
 
         //__________Get list of employees __________
-        public IBaseResponse<List<Employee>> GetEmployees()
+        public IBaseResponse<List<EmployeeViewModel>> GetEmployees()
         {
             try
             {
-                var employees = _employeeRepository.GetAll().ToList();
+                var employees = _employeeRepository.GetAll()
+                   .Select(x => new EmployeeViewModel()
+                   {
+                       Id = x.Id,
+                       Lastname = x.Lastname,
+                       Firstname = x.Firstname,
+                       Middlename = x.Middlename,
+                       PersonnelNumber = x.PersonnelNumber,
+                       Position = x.Position.GetDisplayName(),
+                       DateOfEmployment = x.DateOfEmployment.ToLongDateString()
+                   }).ToList();
                 if (!employees.Any())
                 {
-                    return new BaseResponse<List<Employee>>()
+                    return new BaseResponse<List<EmployeeViewModel>>()
                     {
                         Description = "Найдено 0 элементов",
                         StatusCode = StatusCode.OK
                     };
                 }
 
-                return new BaseResponse<List<Employee>>()
+                return new BaseResponse<List<EmployeeViewModel>>()
                 {
                     Data = employees,
                     StatusCode = StatusCode.OK
@@ -233,13 +246,41 @@ namespace WebProductionAccounting.Services.Implementations
             }
             catch (Exception ex)
             {
-                return new BaseResponse<List<Employee>>()
+                return new BaseResponse<List<EmployeeViewModel>>()
                 {
                     Description = $"[GetEmployees] : {ex.Message}",
                     StatusCode = StatusCode.InternalServerError
                 };
             }
         }
+
+        //__________Get positions of employees __________
+        public BaseResponse<Dictionary<int, string>> GetPosition()
+        {
+            {
+                try
+                {
+                    var positions = ((EmployeePositions[])Enum.GetValues(typeof(EmployeePositions)))
+                        .ToDictionary(k => (int)k, t => t.GetDisplayName());
+
+                    return new BaseResponse<Dictionary<int, string>>()
+                    {
+                        Data = positions,
+                        StatusCode = StatusCode.OK
+                    };
+                }
+                catch (Exception ex)
+                {
+                    return new BaseResponse<Dictionary<int, string>>()
+                    {
+                        Description = ex.Message,
+                        StatusCode = StatusCode.InternalServerError
+                    };
+                }
+            }
+        }
     }
 }
+    
+
     

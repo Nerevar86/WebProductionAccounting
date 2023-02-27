@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using WebProductionAccounting.Domain.Enum;
 
 namespace WebProductionAccounting.Domain.Entities
@@ -8,27 +9,24 @@ namespace WebProductionAccounting.Domain.Entities
     {
         [Key]
         public int Id { get; set; }
-        [Display(Name = "Фамилия")]
-        [Required]
-        [Range(2, 50)]
+
         public string? Lastname { get; set; }
-        [Display(Name = "Имя")]
-        [Required]
-        [Range(2, 50)]
+
         public string? Firstname { get; set; }
-        [Display(Name = "Отчество")]
-        [Required]
-        [Range(2, 50)]
+
         public string? Middlename { get; set; }
-        [Display(Name = "Табельный номер")]
+
         public int PersonnelNumber { get; set; }
-        [Display(Name = "Должность")]
-        [Required]
+
         public EmployeePositions Position { get; set; }
-        [Display(Name = "Дата трудоустройства")]
-        [Required]
+
+        [Column(TypeName = "date")]
         public DateTime DateOfEmployment { get; set; } = DateTime.Now;
-        public virtual List<Job> Jobs { get; set; } = new();
+        public virtual IList<Work> Works { get; } = new List<Work>(); // Skip collection navigation
+
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public virtual IList<EmployeeWork> EmployeeWorks { get; set; } = new List<EmployeeWork>(); // Collection navigation
 
 
     }

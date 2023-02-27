@@ -16,9 +16,9 @@ VANTA.CELLS({
     gyroControls: false,
     minHeight: 200.00,
     minWidth: 200.00,
-    scale: 1.50,
-    color1: 0xff,
-    color2: 0xddff,
+    scale: 1.00,
+    color1: 0x0,
+    color2: 0xb617ff,
     speed: 1.50
 })
 
@@ -46,11 +46,11 @@ anime({
 
 // row
 var trs = document.querySelectorAll("tbody tr");
-//var thead = document.getElementById("tr-hover");
+var thead = document.getElementById("tr-hover");
 
 for (var i = 0; i < trs.length; i++) {
     MakeRowHover(trs[i]);
-    SelectRow(trs[i]);
+//    //SelectRow(trs[i]);
 }
 
 function MakeRowHover(row) {
@@ -65,13 +65,21 @@ function MakeRowHover(row) {
    
 }
 
-function SelectRow(row) {
-    //row click
-    row.addEventListener('click', function () {
-        if (!this.classList.contains('tr-selected')) {
-            this.classList.add('tr-selected');
-        } else {
-            this.classList.remove('tr-selected');
-        }
-    });
-}
+//function SelectRow(row) {
+//    //row click
+//    row.addEventListener('click', function () {
+//        if (!this.classList.contains('tr-selected')) {
+//            this.classList.add('tr-selected');
+//        } else {
+//            this.classList.remove('tr-selected');
+//        }
+//    });
+//}
+
+
+//$('.select2').select2({
+//    //theme: 'bootstrap-5',
+//    closeOnSelect: false
+//});
+
+

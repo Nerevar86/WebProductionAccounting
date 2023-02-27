@@ -1,22 +1,44 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebProductionAccounting.Domain.ViewModels;
+using WebProductionAccounting.Domain.Entities;
+using WebProductionAccounting.Domain.ViewModels.Employee;
 using WebProductionAccounting.Services.Interfaces;
 
-namespace WebProductionAccounting.Controllers
+namespace WebProductionAccounting.Controllers.Employee
 {
     public class EmployeeController : Controller
-    { 
+    {
         private readonly IEmployeeService _employeeService;
         public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
         }
 
+
+        // GetEmployees (List)
         [HttpGet]
         public IActionResult GetEmployees()
         {
             var response = _employeeService.GetEmployees();
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                if (response.Data == null)
+                {
+                    return View(new List<EmployeeViewModel>());
+                }
+                else
+                {
+                    return View(response.Data.ToList());
+                }
+            }
+            return View("Error", $"{response.Description}");
+        }
+
+
+        // DeleteEmployee
+        public async Task<IActionResult> DeleteEmployee(int id)
+        {
+            var response = await _employeeService.GetEmployee(id);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return View(response.Data);
@@ -24,8 +46,9 @@ namespace WebProductionAccounting.Controllers
             return View("Error", $"{response.Description}");
         }
 
-        //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpPost, ActionName("DeleteEmployee")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteEmployeePOST(int id)
         {
             var response = await _employeeService.DeleteEmployee(id);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
@@ -35,10 +58,10 @@ namespace WebProductionAccounting.Controllers
             return View("Error", $"{response.Description}");
         }
 
-        public IActionResult Compare() => PartialView();
 
+        // EditEmployee
         [HttpGet]
-        public async Task<IActionResult> Save(int id)
+        public async Task<IActionResult> EditEmployee(int id)
         {
             if (id == 0)
                 return PartialView();
@@ -53,24 +76,25 @@ namespace WebProductionAccounting.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(EmployeeViewModel viewModel)
+        public async Task<IActionResult> EditEmployee(EmployeeViewModel viewModel)
         {
             ModelState.Remove("Id");
             if (ModelState.IsValid)
             {
                 if (viewModel.Id == 0)
                 {
-                    await _employeeService.Create(viewModel);
+                    await _employeeService.CreateEmployee(viewModel);
                 }
                 else
                 {
-                    await _employeeService.Edit(viewModel.Id, viewModel);
+                    await _employeeService.EditEmployee(viewModel);
                 }
             }
             return RedirectToAction("GetEmployees");
         }
 
 
+        // GetEmployee
         [HttpGet]
         public async Task<ActionResult> GetEmployee(int id, bool isJson)
         {
@@ -87,6 +111,31 @@ namespace WebProductionAccounting.Controllers
         {
             var response = await _employeeService.GetEmployee(term);
             return Json(response.Data);
+        }
+
+
+        //CreateEmployee
+        [HttpGet]
+        public IActionResult CreateEmployee() => PartialView();
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateEmployee(EmployeeViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                await _employeeService.CreateEmployee(viewModel);
+            }
+            return RedirectToAction("GetEmployees");
+        }
+
+
+        //GetPosition
+        [HttpPost]
+        public JsonResult GetPosition()
+        {
+            var positions = _employeeService.GetPosition();
+            return Json(positions.Data);
         }
 
     }

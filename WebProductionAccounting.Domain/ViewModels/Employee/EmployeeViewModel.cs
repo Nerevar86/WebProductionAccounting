@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
+using WebProductionAccounting.Domain.Entities;
 
-namespace WebProductionAccounting.Domain.ViewModels
+namespace WebProductionAccounting.Domain.ViewModels.Employee
 {
     public class EmployeeViewModel
     {
@@ -29,11 +29,12 @@ namespace WebProductionAccounting.Domain.ViewModels
 
         [Display(Name = "Должность")]
         [Required(ErrorMessage = "Выберите должность")]
-        public string? Position { get; set; }    
-            
-        public DateTime DateOfEmployment { get; set; } = DateTime.Now;
+        public string? Position { get; set; }
+
+        [Display(Name = "Дата трудоустройства")]
+        public string DateOfEmployment { get; set; } = DateTime.Now.ToString("D");
 
     }
-    
-      
+
+
 }
